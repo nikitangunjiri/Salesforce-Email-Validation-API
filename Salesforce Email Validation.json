@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Email Validation",
+    "description": "# About this API\n\n\n---\n\nThis API validates emails as follows:\n\n  * It checks the ISPs and indentifies emails with invalid, inactive, parked domains or invalid accounts.\n  * It checks for spam traps which are put in place to identify spammers - avoiding these traps helps improve your reputation score.\n  * Spots domains that return valid for all emails. Skipping them will improve your open rates.\n  * Checks for hard bounces by sending undetectable verifications to find out whether the email address really exists and can receive email messages.\n  * MTA validator - Checks whether there is an email server responsible for accepting email messages? It runs advanced checks to validate MX records.\n  * Checks for syntax errors.\n  \n  >\n  # Responses Explained\n\n---\n\n  * ok - The supplied email address has passed all verification tests\n  * failed - The supplied email address has failed one or more tests\n  * unknown - The supplied email address cannot be accurately tested\n  * incorrect - No email address was provided in the request or it contains a syntax error\n  * key_not_valid - No api key was provided in the request or it was invalid\n  *missing parameters - There are no validations remaining to complete this attempt\n",
+    "version": "1.2-oas3"
+  },
+  "servers": [
+    {
+      "url": "https://apps.emaillistverify.com/"
+    }
+  ],
+  "paths": {
+    "/api/verifyEmail": {
+      "get": {
+        "summary": "Check Email",
+        "parameters": [
+          {
+            "name": "secret",
+            "in": "query",
+            "description": "Secret Token",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email to Validate",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/validation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "default": "Resource not found"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "default": "Resource not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "validation": {
+        "type": "string",
+        "default": "unknown"
+      }
+    }
+  }
+}
